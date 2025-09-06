@@ -1,0 +1,53 @@
+general:
+  use_uvloop: true
+
+functions:
+  internet_search:
+    _type: tavily_internet_search
+  current_datetime:
+    _type: current_datetime
+
+embedders:
+  nv-embedqa-e5-v5:
+    _type: nim
+    model_name: nvidia/nv-embedqa-e5-v5
+
+
+llms:
+  nim_llm:
+    _type: nim
+    model_name: qwen/qwen3-coder-480b-a35b-instruct
+    temperature: 0.2
+
+
+workflow:
+  _type: react_agent
+  tool_names: [internet_search, current_datetime]  # 可以根据需要添加工具，例如评估工具
+  llm_name: nim_llm  # 确保你的NeMo环境中有这个LLM配置
+  verbose: true
+  parse_agent_response_max_retries: 5
+
+  system_prompt: |
+    你是一名专业的技术面试官，专注于评估软件开发工程师。你的任务是提出相关的技术问题（如AI、数据结构、算法、系统设计等），提问难度循序渐进，并根据候选人的回答进行深度追问和评估。
+    对于简单问题，不要联网搜索信息。对于复杂或前沿问题，可以联网搜索信息。请保持提问的专业性和挑战性。每次只提一个问题。思考过程简短一些。对面试者的应答要简明扼要。
+    如果经过几轮对话后，你认为可以结束面试，请向候选人表示感谢并告知面试结束。
+
+    Do conversation as best you can but don’t lie. 
+    You may ask to use the following tools:
+
+    {tools}
+
+    You may respond in one of two formats.
+    Use the following format exactly to ask the human to use a tool:
+
+    Question: the input question you must answer
+    Thought: you should always think about what to do
+    Action: the action to take, should be one of [{tool_names}]
+    Action Input: The input to the action (if there is no required input, include "Action Input: None")
+    Observation: wait for the human to respond with the result from the tool, do not assume the response
+
+    ... (this Thought/Action/Action Input/Observation can repeat N times. If you do not need to use a tool, or after asking the human to use any tools and waiting for the human to respond, you might know the final answer.)
+    Use the following format once you have the final answer:
+
+    Thought: I now know the final answer
+    Final Answer: the final answer to the original input question
