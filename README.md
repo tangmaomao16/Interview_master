@@ -33,10 +33,10 @@ https://docs.nvidia.com/nemo/agent-toolkit/latest/quick-start/installing.html
 
 然后参考启动NeMo Agent Toolkit服务的文档，https://docs.nvidia.com/nemo/agent-toolkit/latest/quick-start/launching-ui.html
 
-在激活环境的一个终端中启动后端服务
+在激活环境的一个终端中启动Agent后端服务
 ```nat serve --config_file=interviewer_master_config.yml```
 
-在激活环境的另一个终端中启动前端服务
+在激活环境的另一个终端中启动Web服务
 ```
 cd external/nat-ui
 npm install
